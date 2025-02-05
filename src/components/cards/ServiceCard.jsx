@@ -5,15 +5,7 @@ import { router } from "expo-router";
 import { useServices } from "../../contexts/ServicesContext";
 
 export function ServiceCard({ service }) {
-  const { acceptService, rejectService, cancelService } = useServices();
-
-  const handleAccept = () => {
-    acceptService(service.id);
-  };
-
-  const handleReject = () => {
-    rejectService(service.id);
-  };
+  const { cancelService } = useServices();
 
   const handleCancel = () => {
     cancelService(service.id, service.fecha, service.ClientId);
@@ -28,25 +20,9 @@ export function ServiceCard({ service }) {
       <Text style={styles.title}>{service.direccionPickUp}</Text>
       <Text style={styles.subtitle}>{service.fecha}</Text>
       <Text style={styles.info}>{service.nota}</Text>
-      {!service.calificado_x_paseador && (
+      {!service.calificado_x_cliente && (
         <View style={styles.buttonContainer}>
-          {!service.aceptado && (
-            <>
-              <TouchableOpacity
-                onPress={handleReject}
-                style={styles.iconButton}
-              >
-                <AntDesign name="close" size={24} color="#FF3B30" />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handleAccept}
-                style={styles.iconButton}
-              >
-                <AntDesign name="check" size={24} color="#34C759" />
-              </TouchableOpacity>
-            </>
-          )}
-          {service.aceptado && !service.comenzado && (
+          {service.comenzado && (
             <>
               <TouchableOpacity
                 onPress={handleCancel}
@@ -56,7 +32,7 @@ export function ServiceCard({ service }) {
               </TouchableOpacity>
             </>
           )}
-          {service.finalizado && !service.calificado_x_paseador && (
+          {service.finalizado && !service.calificado_x_cliente && (
             <>
               <TouchableOpacity
                 onPress={handleReview}

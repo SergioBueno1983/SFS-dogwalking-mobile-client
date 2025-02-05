@@ -5,7 +5,7 @@ import { useUserLog } from "../../contexts/UserLogContext";
 import { useEffect, useState } from "react";
 import ReviewCard from "../cards/ReviewCard";
 
-export default function ShowWalkerReviews() {
+export default function ShowClientReviews() {
   const { userLog } = useUserLog();
   const [reviews, setReviews] = useState([]);
 

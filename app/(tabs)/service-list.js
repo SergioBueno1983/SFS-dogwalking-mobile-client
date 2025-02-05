@@ -10,25 +10,29 @@ import {
 import { useServices } from "../../src/contexts/ServicesContext";
 import ServiceListComponent from "../../src/components/services/ServiceList";
 import { Screen } from "../../src/components/Screen";
-import { AntDesign } from "@expo/vector-icons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
 
 export default function ServiceList() {
-  const { confirmedServices, fetchNextServices } = useServices();
+  const { confirmedServices } = useServices();
+  const [ activeServices, setActiveServices ] = useState([]);
+  const [ nextServices, setNextServices ] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    const fetchServices = async () => {
-      await fetchNextServices();
-    };
-
-    if (confirmedServices === null) {
-      fetchServices();
+    if (confirmedServices !== null) {
+      const activeServices = confirmedServices.filter(
+        (service) => service.comenzado === true,
+      );
+      const nextServices = confirmedServices.filter(
+        (service) => service.comenzado === false,
+      );
+      setActiveServices(activeServices);
+      setNextServices(nextServices);
+      setLoading(false);
     }
-    setLoading(false);
-  }, [fetchNextServices, confirmedServices]);
+  }, [ confirmedServices ]);
 
   if (loading) {
     return (
@@ -45,22 +49,31 @@ export default function ServiceList() {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               onPress={() => {
-                router.push("/service-history");
+                router.push("/service-request");
               }}
               style={styles.button}
             >
               <>
                 <MaterialCommunityIcons
-                  name="history"
+                  name="form"
                   size={24}
                   color="black"
                 />
-                <Text>Historial</Text>
+                <Text>Solicitudes Pendientes</Text>
               </>
             </TouchableOpacity>
           </View>
           {confirmedServices && confirmedServices.length > 0 ? (
-            <ServiceListComponent services={confirmedServices} />
+            <>
+              {activeServices.length > 0 && <View>
+                 <Text style={styles.text}>Servicios Activos</Text>  
+                 <ServiceListComponent services={activeServices} />
+              </View>}
+              {nextServices.length > 0 && <View>
+                <Text style={styles.text}>Proximos Servicios</Text>  
+                <ServiceListComponent services={nextServices} /> 
+              </View>}
+            </>
           ) : (
             <Text style={styles.text}>No hay servicios confirmados</Text>
           )}

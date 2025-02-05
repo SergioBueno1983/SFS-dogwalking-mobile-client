@@ -11,8 +11,6 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useUserLog } from "../../contexts/UserLogContext";
-import { useTurns } from "../../contexts/TurnsContext";
-import { Ionicons } from "@expo/vector-icons";
 import globalConstants from "../../const/globalConstants";
 import { getToken } from "../../utils/authStorage";
 import { useServices } from "../../contexts/ServicesContext";
@@ -54,7 +52,7 @@ export function AddReviewForm({ serviceId }) {
       const review = {
         valoracion: valoracion,
         descripcion: descripcion,
-        receiverId: service.ClientId,
+        receiverId: service.Turn.WalkerId,
         writerId: userLog.id,
         serviceId: service.id,
       };

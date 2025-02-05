@@ -3,7 +3,6 @@ import * as Linking from "expo-linking";
 import { Stack, Slot } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { UserLogProvider } from "../src/contexts/UserLogContext";
-import { TurnsProvider } from "../src/contexts/TurnsContext";
 import { ServicesProvider } from "../src/contexts/ServicesContext";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
@@ -15,7 +14,6 @@ import Notifications from "../src/components/Notifications";
 import { Provider as PaperProvider } from "react-native-paper";
 import ChatList from "../src/components/ChatList";
 import { useUserLog } from "../src/contexts/UserLogContext";
-import { WalkerLocationProvider } from "../src/contexts/WalkerLocationContext";
 import { ShowHeadreToolsProvider } from "../src/contexts/ShowHeaderToolsContext";
 
 export default function Layout() {
@@ -80,37 +78,33 @@ function Content() {
       <ChatsProvider>
         <NotificationsProvider>
           <ShowHeadreToolsProvider>
-            <TurnsProvider>
-              <ServicesProvider>
-                <WalkerLocationProvider>
-                  <Stack
-                    screenOptions={{
-                      headerRight: () =>
-                        userLog ? (
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              alignItems: "flex-end",
-                              gap: 0,
-                            }}
-                          >
-                            <ChatList style={{ padding: 10 }} />
-                            <Notifications style={{ padding: 10 }} />
-                          </View>
-                        ) : null,
-                      headerTitle: "",
-                    }}
-                  >
-                    <Stack.Screen
-                      name="chat/[clientId]"
-                      options={{
-                        headerRight: () => null,
-                      }}
-                    />
-                  </Stack>
-                </WalkerLocationProvider>
-              </ServicesProvider>
-            </TurnsProvider>
+            <ServicesProvider>
+              <Stack
+                screenOptions={{
+                  headerRight: () =>
+                    userLog ? (
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "flex-end",
+                          gap: 0,
+                        }}
+                      >
+                        <ChatList style={{ padding: 10 }} />
+                        <Notifications style={{ padding: 10 }} />
+                      </View>
+                    ) : null,
+                  headerTitle: "",
+                }}
+              >
+                <Stack.Screen
+                  name="chat/[walkerId]"
+                  options={{
+                    headerRight: () => null,
+                  }}
+                />
+              </Stack>
+            </ServicesProvider>
           </ShowHeadreToolsProvider>  
         </NotificationsProvider>
       </ChatsProvider>

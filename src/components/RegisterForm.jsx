@@ -33,7 +33,7 @@ export function RegisterForm() {
     // paso dateOfBirth a formato "yyyy-mm-dd"
     const dateOfBirthFormatted = dateOfBirth.toISOString().split("T")[0];
     try {
-      const apiUrl = `${GlobalConstants.URL_BASE}/walkers`;
+      const apiUrl = `${GlobalConstants.URL_BASE}/clients`;
 
       // hago el fetch a la api
       const response = await fetch(apiUrl, {
@@ -54,7 +54,6 @@ export function RegisterForm() {
       if (!response.ok) {
         throw new Error(`Error en el registro: ${response.status}`);
       }
-
       router.back();
     } catch (error) {
       console.error("Error al registrar el usuario:", error);

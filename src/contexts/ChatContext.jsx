@@ -48,7 +48,7 @@ export const ChatsProvider = ({ children }) => {
 
       let response;
 
-      response = await fetch(`${globalConstants.URL_BASE}/contacts/clients/${userLog.id}`, {
+      response = await fetch(`${globalConstants.URL_BASE}/contacts/walkers/${userLog.id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -160,8 +160,8 @@ export const ChatsProvider = ({ children }) => {
         // si no existia ya un chat con ese usuario, busco el cliente con el senderId que me llega con el mensaje y lo agrego al estado
         if (!existingChat) {
 
-          // hago un fetch para obtener el cliente que envia con el senderId
-          const response = await fetch(`${globalConstants.URL_BASE}/clients/body/${newMessage.senderId}`, {
+          // hago un fetch para obtener el paseador que envia con el senderId
+          const response = await fetch(`${globalConstants.URL_BASE}/walkers/${newMessage.senderId}`, {
             headers: {
               'Authorization': `Bearer ${token}`,
             },

@@ -5,19 +5,14 @@ import ServiceListComponent from "../../src/components/services/ServiceList";
 import { Screen } from "../../src/components/Screen";
 
 export default function ServiceRequests() {
-  const { servicesRequest, fetchNextServices } = useServices();
+  const { servicesRequest } = useServices();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchServices = async () => {
-      await fetchNextServices();
-    };
-
-    if (servicesRequest === null) {
-      fetchServices();
+    if (servicesRequest !== null) {
+      setLoading(false);
     }
-    setLoading(false);
-  }, [servicesRequest, fetchNextServices]);
+  }, [servicesRequest]);
 
   if (loading) {
     return (
@@ -30,17 +25,24 @@ export default function ServiceRequests() {
   return (
     <ScrollView>
       <Screen>
+      <Text style={styles.title}>Servicios realizados</Text>
+
         {servicesRequest && servicesRequest.length > 0 ? (
           <ServiceListComponent services={servicesRequest} />
         ) : (
-          <Text style={styles.text}>No hay servicios disponibles.</Text>
+          <Text style={styles.text}>No hay solicitudes de servicio pendientes.</Text>
         )}
       </Screen>
     </ScrollView>
   );
 }
-
 const styles = StyleSheet.create({
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+  },
   text: {
     marginTop: 40,
     fontSize: 20,

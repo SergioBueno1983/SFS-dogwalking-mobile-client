@@ -9,24 +9,24 @@ import { getToken } from '../utils/authStorage';
 import globalConstants from '../const/globalConstants';
 import { ActivityIndicator } from 'react-native-paper';
 
-const ChatComponent = ({ clientId }) => {
+const ChatComponent = ({ walkerId }) => {
   const socket = useWebSocket();
   const { userLog } = useUserLog();
   const { userWithUnreadMessage, setUserWithUnreadMessage, removeUnreadChat, usersWithChats, setUsersWithChat } = useChatsContext();
   const [messages, setMessages] = useState([]);
   const router = useRouter();
-  const [client, setClient] = useState(null);
+  const [walker, setWalker] = useState(null);
 
     // Función para emitir eventos de WebSocket
     const emitSocketEvent = (eventName, data) => {
       if (socket) socket.emit(eventName, data);
     };
 
-  //useEffect para ver si el cliente tiene mensajes no leidos, para marcarlos como leidos
+  //useEffect para ver si el walkere tiene mensajes no leidos, para marcarlos como leidos
   useEffect(() => {
-    const fetchClient = async () => {
+    const fetchWalker = async () => {
       try {
-        const apiUrl = `${globalConstants.URL_BASE}/clients/body/${clientId}`;
+        const apiUrl = `${globalConstants.URL_BASE}/walkers/${walkerId}`;
         const token = await getToken();
         const response = await fetch(apiUrl, {
           headers: {
@@ -34,54 +34,32 @@ const ChatComponent = ({ clientId }) => {
           },
         });
         const data = await response.json();
-        setClient(data.body);
+        setWalker(data.body);
       } catch (error) {
-        console.error('Error al obtener el cliente:', error);
+        console.error('Error al obtener el walker:', error);
       }
     };
 
-    fetchClient();
-  }, [clientId]);
+    fetchWalker();
+  }, [walkerId]);
 
-  /* useEffect(() => {
-    if (!socket || !userLog || !client) return;
-
-    emitSocketEvent('getUnreadMessages', { receiverId: userLog.id, senderId: client.id });
-
-    socket.on('unreadMessages', (unreadMessages) => {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        ...unreadMessages.filter((msg) => !prevMessages.some((m) => m.id === msg.id)),
-      ]);
-      unreadMessages.forEach((msg) => emitSocketEvent('messageRead', { messageId: msg.id }));
-
-
-      if (userWithUnreadMessage.length > 0 && userWithUnreadMessage.has(client.id)) {
-      // actualizo el estado unreadChats para quitar el chat con id = msg.senderId
-      setUserWithUnreadMessage((prevUnreadChats) => prevUnreadChats.filter((c) => c.id !== receiver.id));}
-      
-    });
-
-    return () => socket.off('unreadMessages');
-  }, [socket, client, userLog, userWithUnreadMessage]); */
   
-
-  // en caso de tener mensajes sin leer, lo marco como leido, sacar al cliente de la lista
+  // en caso de tener mensajes sin leer, lo marco como leido, sacar al walkere de la lista
   useEffect(() => {
-    if (client && userWithUnreadMessage.has(client.id)) {
-      removeUnreadChat(client.id);
+    if (walker && userWithUnreadMessage.has(walker.id)) {
+      removeUnreadChat(walker.id);
     }
-  }, [client, userWithUnreadMessage]);
+  }, [walker, userWithUnreadMessage]);
 
   // Cargar mensajes desde la API
   useEffect(() => {
-    if (!userLog || !client) return;
+    if (!userLog || !walker) return;
 
     const cargarMensajes = async () => {
       try {
         const token = await getToken();
         const response = await fetch(
-          `${globalConstants.URL_BASE}/messages/${userLog.id}/${client.id}`,
+          `${globalConstants.URL_BASE}/messages/${userLog.id}/${walker.id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -100,7 +78,7 @@ const ChatComponent = ({ clientId }) => {
             createdAt: new Date(msg.createdAt),
             user: {
               _id: msg.senderId,
-              name: msg.senderId === userLog.id ? 'Tú' : client.User.nombre_usuario,
+              name: msg.senderId === userLog.id ? 'Tú' : walker.User.nombre_usuario,
             },
             read: msg.read,
           }))
@@ -111,15 +89,15 @@ const ChatComponent = ({ clientId }) => {
     };
 
     cargarMensajes();
-  }, [client, userLog]);
+  }, [walker, userLog]);
 
   // Manejar recepción de mensajes por WebSocket
   useEffect(() => {
-    if (!socket || !client || !userLog) return;
+    if (!socket || !walker || !userLog) return;
 
     const handleNewMessage = (newMessage) => {
       if (
-        (newMessage.receiverId === userLog.id && newMessage.senderId === client.id)
+        (newMessage.receiverId === userLog.id && newMessage.senderId === walker.id)
       ) {
         const formattedMessage = {
           _id: newMessage.id,
@@ -127,7 +105,7 @@ const ChatComponent = ({ clientId }) => {
           createdAt: new Date(),
           user: {
             _id: newMessage.senderId,
-            name: newMessage.senderId === userLog.id ? 'Tú' : client.nombre_usuario,
+            name: newMessage.senderId === userLog.id ? 'Tú' : walker.nombre_usuario,
           },
           read: newMessage.leido,
         };
@@ -140,17 +118,17 @@ const ChatComponent = ({ clientId }) => {
     return () => {
       socket.off('receiveMessage', handleNewMessage);
     };
-  }, [socket, client, userLog]);
+  }, [socket, walker, userLog]);
 
   // Enviar mensaje
   const onSend = useCallback(
     (messages = []) => {
-      if (!userLog || !client) return;
+      if (!userLog || !walker) return;
 
       const [newMessage] = messages;
       const messageToSend = {
         senderId: userLog.id,
-        receiverId: client.id,
+        receiverId: walker.id,
         contenido: newMessage.text,
       };
 
@@ -158,7 +136,7 @@ const ChatComponent = ({ clientId }) => {
 
       setMessages((prevMessages) => GiftedChat.append(prevMessages, messages));
     },
-    [userLog, client, socket]
+    [userLog, walker, socket]
   );
 
   useEffect(() => {
@@ -186,7 +164,7 @@ const ChatComponent = ({ clientId }) => {
         messages={messages}
         onSend={(messages) => onSend(messages)}
         user={{
-          _id: userLog.id, // El usuario es el cliente
+          _id: userLog.id, // El usuario es el walkere
           name: 'Tú',
         }}
         

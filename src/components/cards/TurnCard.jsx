@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { useTurns } from "../../contexts/TurnsContext";
 import { Alert } from "react-native";
 import { useRouter } from "expo-router";
 

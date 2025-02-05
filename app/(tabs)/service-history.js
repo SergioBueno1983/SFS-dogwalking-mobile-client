@@ -4,20 +4,15 @@ import { useServices } from "../../src/contexts/ServicesContext";
 import ServiceListComponent from "../../src/components/services/ServiceList";
 import { Screen } from "../../src/components/Screen";
 
-export default function ServiceRequests() {
-  const { servicesHistory, fetchFinishedServices } = useServices();
+export default function ServiceHistory() {
+  const { servicesHistory } = useServices();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchServices = async () => {
-      await fetchFinishedServices();
-    };
-
-    if (servicesHistory === null) {
-      fetchServices();
+    if (servicesHistory !== null) {
+      setLoading(false);
     }
-    setLoading(false);
-  }, [servicesHistory, fetchFinishedServices]);
+  }, [servicesHistory]);
 
   if (loading) {
     return (
@@ -30,24 +25,17 @@ export default function ServiceRequests() {
   return (
     <ScrollView>
       <Screen>
-      <Text style={styles.title}>Servicios realizados</Text>
-
         {servicesHistory && servicesHistory.length > 0 ? (
           <ServiceListComponent services={servicesHistory} />
         ) : (
-          <Text style={styles.text}>No hay servicios en el historial</Text>
+          <Text style={styles.text}>No hay servicios en el historial.</Text>
         )}
       </Screen>
     </ScrollView>
   );
 }
+
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-  },
   text: {
     marginTop: 40,
     fontSize: 20,

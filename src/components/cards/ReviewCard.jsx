@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet } from "react-native";
-import StarRating from "../walker/StarRating";
+import StarRating from "../client/StarRating";
 
 export default function ReviewCard({ review }) {
   return (

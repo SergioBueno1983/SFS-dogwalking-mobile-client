@@ -4,9 +4,9 @@ import { ScrollView } from "react-native";
 import { Screen } from "../../src/components/Screen";
 
 export default function ChatPage() {
-  const { clientId } = useLocalSearchParams();
+  const { walkerId } = useLocalSearchParams();
 
   return (
-        <ChatComponent clientId={clientId} />
+    <ChatComponent walkerId={walkerId} />
   );
 }

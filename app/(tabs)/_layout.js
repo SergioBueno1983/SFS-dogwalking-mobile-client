@@ -1,6 +1,5 @@
 import { Tabs } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
-import Notifications from "../../src/components/Notifications";
 
 export default function TabsLayout() {
   return (
@@ -21,7 +20,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="service-requests"
+        name="service-history"
         options={{
           title: "Solicitudes",
           tabBarIcon: ({ color }) => (
@@ -37,16 +36,7 @@ export default function TabsLayout() {
             <AntDesign name="profile" size={24} color="#000" />
           ),
         }}
-      />
-      <Tabs.Screen
-        name="turn-list"
-        options={{
-          title: "Turnos",
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="calendar" size={24} color="#000" />
-          ),
-        }}
-      />
+      />     
 
       <Tabs.Screen
         name="profile"
