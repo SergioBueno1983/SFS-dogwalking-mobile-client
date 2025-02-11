@@ -2,9 +2,11 @@ import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { getToken } from "../../utils/authStorage";
 import globalConstants from "../../const/globalConstants";
 import { useRouter } from "expo-router";
+import { useBillsContext } from "../../contexts/BillsContext";
 
 export default function BillCard({ bill }) {
   const router = useRouter();
+  const { getBills } = useBillsContext();
 
   const onCashPayment = async () => {
     try {
@@ -12,12 +14,12 @@ export default function BillCard({ bill }) {
 
       // hago un fetch
       const response = await fetch(
-        `${globalConstants.URL_BASE}/v1/bills/${bill.id}`,
+        `${globalConstants.URL_BASE}/bills/${bill.id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "Access-Token": token,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             pagado: false,
@@ -26,9 +28,12 @@ export default function BillCard({ bill }) {
         },
       );
       const data = await response.json();
+      console.log(data);
       if (!data.ok) {
         throw new Error("Network error");
       }
+
+      await getBills();
       router.back();
     } catch (error) {
       console.error(error);
@@ -57,6 +62,9 @@ export default function BillCard({ bill }) {
                 <Text>Pagar con MercadoPago</Text>
               </TouchableOpacity>
             )}
+          {bill.pendiente === true && (
+            <Text>Esta factura está pendiente de pago</Text>
+          )}
         </>
       ) : null}
     </View>

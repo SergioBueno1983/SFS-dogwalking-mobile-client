@@ -103,7 +103,7 @@ export function AddReviewForm({ serviceId }) {
   }
 
   return (
-    <View style={styles.container}> 
+    <View style={styles.container}>
       <Text style={styles.title}>Agregar Reseña</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Valoracion</Text>
@@ -132,7 +132,6 @@ export function AddReviewForm({ serviceId }) {
       </TouchableOpacity>
       {error && <Text style={styles.error}>{error}</Text>}
     </View>
- 
   );
 }
 
