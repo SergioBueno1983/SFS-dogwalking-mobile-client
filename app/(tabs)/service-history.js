@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator, ScrollView, StyleSheet } from "react-native";
+import { Text, ActivityIndicator, ScrollView, StyleSheet } from "react-native";
 import { useServices } from "../../src/contexts/ServicesContext";
 import ServiceListComponent from "../../src/components/services/ServiceList";
 import { Screen } from "../../src/components/Screen";

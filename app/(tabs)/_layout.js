@@ -20,15 +20,6 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="service-history"
-        options={{
-          title: "Solicitudes",
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="book" size={24} color="#000" />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="service-list"
         options={{
           title: "Servicios",
@@ -36,7 +27,26 @@ export default function TabsLayout() {
             <AntDesign name="profile" size={24} color="#000" />
           ),
         }}
-      />     
+      />
+      <Tabs.Screen
+        name="service-history"
+        options={{
+          title: "Historial",
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="book" size={24} color="#000" />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="bills"
+        options={{
+          title: "Facturas",
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="book" size={24} color="#000" />
+          ),
+        }}
+      />
 
       <Tabs.Screen
         name="profile"

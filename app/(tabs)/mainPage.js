@@ -6,5 +6,5 @@ export default function MainPage() {
     <Screen>
       <Main />
     </Screen>
-  ) 
+  );
 }

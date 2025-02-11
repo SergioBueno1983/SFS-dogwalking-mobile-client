@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
   ActivityIndicator,
   ScrollView,
   StyleSheet,
+  Text,
+  View,
 } from "react-native";
-import { useServices } from "../../src/contexts/ServicesContext";
-import ServiceListComponent from "../../src/components/services/ServiceList";
 import { Screen } from "../../src/components/Screen";
+import { useBillsContext } from "../../src/contexts/BillsContext";
+import { useEffect, useState } from "react";
+import BillList from "../../src/components/bills/BillList";
 
-export default function ServiceRequests() {
-  const { servicesRequest } = useServices();
+export default function BillHistory() {
+  const { paidBills } = useBillsContext();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (servicesRequest !== null) {
+    if (paidBills !== null) {
       setLoading(false);
     }
-  }, [servicesRequest]);
+  }, [paidBills]);
 
   if (loading) {
     return (
@@ -31,19 +31,19 @@ export default function ServiceRequests() {
   return (
     <ScrollView>
       <Screen>
-        <Text style={styles.title}>Servicios Pendientes</Text>
-
-        {servicesRequest && servicesRequest.length > 0 ? (
-          <ServiceListComponent services={servicesRequest} />
+        {paidBills && paidBills.length > 0 ? (
+          <View>
+            <Text style={styles.title}>Facturas pagadas</Text>
+            <BillList bills={paidBills} />
+          </View>
         ) : (
-          <Text style={styles.text}>
-            No hay solicitudes de servicio pendientes.
-          </Text>
+          <Text style={styles.text}>No hay facturas pagadas.</Text>
         )}
       </Screen>
     </ScrollView>
   );
 }
+
 const styles = StyleSheet.create({
   title: {
     fontSize: 24,
