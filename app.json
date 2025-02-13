@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "SFS-dogwalking",
+    "scheme": "sfs-dogwalking",
     "platforms": ["ios", "android"],
     "newArchEnabled": true,
     "splash": {
