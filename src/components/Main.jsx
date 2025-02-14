@@ -1,10 +1,11 @@
 import { View, StyleSheet, Text } from "react-native";
+import WalkersList from "./WalkerList";
 
 export function Main() {
   return (
     <>
       <View style={styles.todayTurnsContainer}>
-        <Text>Today turns</Text>
+        <WalkersList />
       </View>
     </>
   );

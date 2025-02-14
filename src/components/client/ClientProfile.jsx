@@ -47,6 +47,7 @@ export default function ClientProfile() {
     };
     if (!client) {
       fetchClient();
+      
     }
   }, [client, userLog.id]);
 
@@ -98,6 +99,7 @@ export default function ClientProfile() {
         );
 
         const data = await response.json();
+        
         if (data.ok) {
           setModalVisible(false); // Cerramos el modal
           alert("Imagen de perfil actualizada exitosamente");
@@ -146,6 +148,30 @@ export default function ClientProfile() {
         >
           <AntDesign name="form" size={28} />
         </TouchableOpacity>
+      </View>
+      <View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Dirección: </Text>
+                <Text style={{ fontSize: 16 }}> {client?.User.direccion}</Text>                
+              </View>
+        
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>E-Mail: </Text>
+                <Text style={{ fontSize: 16 }}> {client?.User.email}</Text>
+                
+              </View>
+        
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Teléfono: </Text>
+                <Text style={{ fontSize: 16 }}> {client?.User.telefono}</Text>
+
+              </View>
+        
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Fecha de Nacimiento: </Text>
+                <Text style={{ fontSize: 16 }}> {userLog.fecha_nacimiento}</Text>
+              </View>
+
       </View>
       <TouchableOpacity onPress={handleLogOut}>
         <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Cerrar sesión</Text>
@@ -197,6 +223,10 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     marginRight: 20,
+  },
+  inputContainer: {
+    marginBottom: 15,
+    width: "95%",
   },
   userInfo: {
     flex: 1,
