@@ -48,6 +48,7 @@ export function AddReviewForm({ serviceId }) {
       if (!verify) {
         return;
       }
+      console.log(data);
 
       const review = {
         valoracion: valoracion,
@@ -56,6 +57,7 @@ export function AddReviewForm({ serviceId }) {
         writerId: userLog.id,
         serviceId: service.id,
       };
+      console.log(review);
 
       const reviewResponse = await fetch(`${globalConstants.URL_BASE}/review`, {
         method: "POST",

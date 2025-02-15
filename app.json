@@ -7,7 +7,10 @@
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
     "scheme": "SFS-dogwalking",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "newArchEnabled": true,
     "splash": {
       "image": "./src/assets/splash.png",
@@ -29,7 +32,8 @@
       "favicon": "./src/assets/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-secure-store"
     ]
   }
 }

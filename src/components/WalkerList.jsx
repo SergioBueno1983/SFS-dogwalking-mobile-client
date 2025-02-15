@@ -6,7 +6,7 @@ import * as Location from 'expo-location';
 import { getToken } from "../utils/authStorage";
 import globalConstants from '../const/globalConstants';
 import barriosData from '../assets/barrios.json';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { AntDesign } from "@expo/vector-icons";
 
 function WalkersList() {
   const [walkers, setWalkers] = useState([]);
@@ -90,7 +90,7 @@ function WalkersList() {
       <View style={styles.container}>        
         {/* Botón para abrir el modal de filtros */}
         <Pressable  onPress={() => setModalVisible(true)}>
-            <Ionicons name="filter" size={24} color="black" />
+            <AntDesign name="filter" size={24} color="black" />
         </Pressable>
 
         {/* Modal con los filtros */}
@@ -167,19 +167,71 @@ function WalkersList() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 10, backgroundColor: '#fff' },
-  filterButton: { backgroundColor: '#007BFF', padding: 10, borderRadius: 5, alignItems: 'left', marginBottom: 10 },
-  filterButtonText: { color: '#fff', fontWeight: 'bold' },
-  modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
-  modalContent: { width: '80%', backgroundColor: '#fff', padding: 20, borderRadius: 10 },
-  modalTitle: { fontSize: 18, fontWeight: 'bold', textAlign: 'center', marginBottom: 10 },
-  picker: { height: 50, width: '100%', backgroundColor: '#ddd', marginBottom: 10 },
-  input: { backgroundColor: '#ddd', padding: 10, borderRadius: 5, marginBottom: 10 },
-  modalButtons: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 },
-  applyButton: { backgroundColor: 'green', padding: 10, borderRadius: 5 },
-  clearButton: { backgroundColor: 'red', padding: 10, borderRadius: 5 },
-  buttonText: { color: '#fff', fontWeight: 'bold' },
-  errorText: { color: 'red', textAlign: 'center', marginTop: 20 },
+  container: {
+     flex: 1,
+     padding: 10,
+     backgroundColor: '#fff'},
+
+  filterButton: { 
+    backgroundColor: '#007BFF', 
+    padding: 10, borderRadius: 5, 
+    alignItems: 'left', 
+    marginBottom: 10 },
+
+  filterButtonText: { 
+    color: '#fff', 
+    fontWeight: 'bold' },
+
+  modalContainer: { 
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: 'rgba(0,0,0,0.5)' },
+
+  modalContent: { 
+    width: '80%', 
+    backgroundColor: '#fff', 
+    padding: 20, 
+    borderRadius: 10 },
+
+  modalTitle: { 
+    fontSize: 18, 
+    fontWeight: 'bold', 
+    textAlign: 'center', 
+    marginBottom: 10 },
+
+  picker: { 
+    height: 50, 
+    width: '100%', 
+    backgroundColor: '#ddd', 
+    marginBottom: 10 },
+
+  input: { 
+    backgroundColor: '#ddd', 
+    padding: 10, 
+    borderRadius: 5, 
+    marginBottom: 10 },
+
+  modalButtons: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    marginTop: 10 },
+
+  applyButton: { 
+    backgroundColor: 'green', 
+    padding: 10, 
+    borderRadius: 5 },
+
+  clearButton: { 
+    backgroundColor: 'red', 
+    padding: 10, borderRadius: 5 },
+
+  buttonText: { color: '#fff', 
+    fontWeight: 'bold' },
+
+  errorText: { color: 'red', 
+    textAlign: 'center', 
+    marginTop: 20 },
 });
 
 export default WalkersList;

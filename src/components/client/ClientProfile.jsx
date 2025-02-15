@@ -17,6 +17,7 @@ import { useRouter } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import { useUserLog } from "../../contexts/UserLogContext";
 
+
 export default function ClientProfile() {
   const [client, setClient] = useState(null);
   const [uriImage, setUriImage] = useState(null);
@@ -149,7 +150,7 @@ export default function ClientProfile() {
           <AntDesign name="form" size={28} />
         </TouchableOpacity>
       </View>
-      <View>
+      <View style={styles.clientInfoContainer}>
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Dirección: </Text>
                 <Text style={{ fontSize: 16 }}> {client?.User.direccion}</Text>                
@@ -173,9 +174,12 @@ export default function ClientProfile() {
               </View>
 
       </View>
-      <TouchableOpacity onPress={handleLogOut}>
-        <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Cerrar sesión</Text>
-      </TouchableOpacity>
+      <View style={styles.logoutContainer}>
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogOut}>
+          <AntDesign name="logout" size={20} color="white" />
+          <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Modal */}
       <Modal
@@ -213,11 +217,38 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
     width: "100%",
   },
+  clientInfoContainer: {
+    flex: 1, // Ocupa todo el espacio disponible
+  },
   header: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 20,
   },
+
+  logoutContainer: {
+    position: "relative", // Posiciona el botón en la parte inferior
+    right: 2, // Distancia desde la parte inferior
+    bottom:2, // Distancia desde la parte inferior
+    paddingTop: 25,
+  },
+  logoutButton: {
+    flexDirection: "row", // Alinea el ícono y el texto en fila
+    alignItems: "center", // Centra verticalmente
+    backgroundColor: "#ff4444",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 25,
+    width: "43%",
+  },
+
+  logoutButtonText: {
+    color: "white",
+    marginLeft: 8, // Espacio entre el ícono y el texto
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+
   profilePicture: {
     width: 100,
     height: 100,

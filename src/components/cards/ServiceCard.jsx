@@ -22,7 +22,7 @@ export function ServiceCard({ service }) {
       <Text style={styles.info}>{service.nota}</Text>
       {!service.calificado_x_cliente && (
         <View style={styles.buttonContainer}>
-          {service.comenzado && (
+          {service.comenzado && !service.finalizado && (
             <>
               <TouchableOpacity
                 onPress={handleCancel}
