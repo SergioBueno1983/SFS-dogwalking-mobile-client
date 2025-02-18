@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text } from "react-native";
-import WalkersList from "./WalkerList";
+import WalkersList from "./walkers/WalkerList";
 
 export function Main() {
   return (

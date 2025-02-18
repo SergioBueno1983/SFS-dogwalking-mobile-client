@@ -1,12 +1,13 @@
 import { ScrollView } from "react-native";
 import { Screen } from "../../src/components/Screen";
-import ShowClientReviews from "../../src/components/client/ShowClientReviews";
+import ShowReviews from "../../src/components/reviews/ShowReviews";
 
-export default function WalkerReviews() {
+
+export default function ClientReviews() {
   return (
     <ScrollView>
       <Screen>
-        <ShowClientReviews />
+        <ShowReviews />
       </Screen>
     </ScrollView>
   );

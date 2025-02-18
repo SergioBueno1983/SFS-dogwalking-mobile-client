@@ -19,7 +19,6 @@ import { useUserLog } from "../../contexts/UserLogContext";
 
 
 export default function ClientProfile() {
-  const [client, setClient] = useState(null);
   const [uriImage, setUriImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false); // Controla el modal
   const router = useRouter();
@@ -27,30 +26,14 @@ export default function ClientProfile() {
 
   // cargo el client y su foto de perfil
   useEffect(() => {
-    if (!userLog || !userLog.id) {
+    if (!userLog ) {
       return <Text>No hay usuario autenticado</Text>;
-    }
-    const fetchClient = async () => {
-      const apiUrl = `${globalConstants.URL_BASE}/clients/body/${userLog.id}`;
-      const token = await getToken();
-      const response = await fetch(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (data.body.User.foto) {
-        const urlImage =
-          `${globalConstants.URL_BASE_IMAGES}` + data.body.User.foto;
-        setUriImage(urlImage);
-      }
-      setClient(data.body);
-    };
-    if (!client) {
-      fetchClient();
-      
-    }
-  }, [client, userLog.id]);
+    }      
+    const urlImage =
+     `${globalConstants.URL_BASE_IMAGES}` + userLog.foto;
+    setUriImage(urlImage); 
+    
+  }, [ userLog.id]);
 
   const handleSelectPhoto = async () => {
     if (!userLog || !userLog.id) {
@@ -85,7 +68,7 @@ export default function ClientProfile() {
 
       try {
         const token = await getToken();
-        const username = client?.User.nombre_usuario;
+        const username = userLog?.nombre_usuario;
 
         const response = await fetch(
           `${globalConstants.URL_BASE}/image/single/${username}`,
@@ -137,8 +120,8 @@ export default function ClientProfile() {
           />
         </Pressable>
         <View style={styles.userInfo}>
-          <Text style={styles.username}>{client?.User.nombre_usuario}</Text>
-          <StarRating rating={client?.User.calificacion} />
+          <Text style={styles.username}>{userLog?.nombre_usuario}</Text>
+          <StarRating rating={userLog?.calificacion} />
           <TouchableOpacity onPress={() => router.push("/client-reviews")}>
             <Text style={{ fontSize: 16, textDecorationLine: "underline" }}>Ver Reseñas</Text>
           </TouchableOpacity>
@@ -153,24 +136,24 @@ export default function ClientProfile() {
       <View style={styles.clientInfoContainer}>
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Dirección: </Text>
-                <Text style={{ fontSize: 16 }}> {client?.User.direccion}</Text>                
+                <Text style={{ fontSize: 16 }}> {userLog?.direccion}</Text>                
               </View>
         
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>E-Mail: </Text>
-                <Text style={{ fontSize: 16 }}> {client?.User.email}</Text>
+                <Text style={{ fontSize: 16 }}> {userLog?.email}</Text>
                 
               </View>
         
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Teléfono: </Text>
-                <Text style={{ fontSize: 16 }}> {client?.User.telefono}</Text>
+                <Text style={{ fontSize: 16 }}> {userLog?.telefono}</Text>
 
               </View>
         
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Fecha de Nacimiento: </Text>
-                <Text style={{ fontSize: 16 }}> {userLog.fecha_nacimiento}</Text>
+                <Text style={{ fontSize: 16 }}> {userLog?.fecha_nacimiento}</Text>
               </View>
 
       </View>

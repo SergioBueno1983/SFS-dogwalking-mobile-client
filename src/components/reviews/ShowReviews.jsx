@@ -5,15 +5,44 @@ import { useUserLog } from "../../contexts/UserLogContext";
 import { useEffect, useState } from "react";
 import ReviewCard from "../cards/ReviewCard";
 
-export default function ShowClientReviews() {
+export default function ShowReviews({ walkerId }) {
   const { userLog } = useUserLog();
   const [reviews, setReviews] = useState([]);
+  const [walker, setWalker] = useState(null);
+
+  useEffect(() => {
+    try {
+    // traigo el walker si existe
+    const fetchWalker = async () => {
+      const apiUrl = `${globalConstants.URL_BASE}/walkers/${walkerId}`;
+      const token = await getToken();
+      const response = await fetch(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      setWalker(data.body);
+    };
+    if (!walker && walkerId) {
+      fetchWalker();
+    }
+    }
+    catch (error) {
+      console.error("Error al cargar el walker:", error);
+    }
+  }, [walkerId])
 
   useEffect(() => {
     //cargar las reviews desde la api
     const fetchReviews = async () => {
       try {
-        const apiUrl = `${globalConstants.URL_BASE}/review/receiver/${userLog.id}`;
+        let apiUrl;
+        if (walkerId) {
+          apiUrl = `${globalConstants.URL_BASE}/review/receiver/${walkerId}`;
+        } else {
+          apiUrl = `${globalConstants.URL_BASE}/review/receiver/${userLog.id}`;
+        }
         const token = await getToken();
         const response = await fetch(apiUrl, {
           headers: {
@@ -31,15 +60,15 @@ export default function ShowClientReviews() {
     };
 
     fetchReviews();
-  }, [userLog.id]);
+  }, [userLog.id, walkerId]);
 
   return (
     <View style={{ flex: 1, paddingHorizontal: 10, paddingBottom: 10, width: "100%" }}>
-      <Text style={styles.title}>Tus Reseñas</Text>
+      {walker ? <Text style={styles.title}>Reseñas de {walker.User.nombre_usuario}</Text> : <Text style={styles.title}>Tus Reseñas</Text>}
 
       {reviews.length > 0 ? reviews.map((review) => (
         <ReviewCard key={review.id} review={review} />
-      )): <Text style={styles.text}>No tienes reseñas por el momento.</Text>}
+      )): <Text style={styles.text}>No hay reseñas por el momento.</Text>}
     </View>
   );
 }

@@ -3,16 +3,17 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import globalConstants from "../../const/globalConstants";
 import { Paragraph, Title } from "react-native-paper";
 import StarRating from "../client/StarRating";
+import { useRouter } from "expo-router";
 
 export function WalkerCard({ walker }) {
 
     const [imageUrl, setImageUrl] = useState(null);
+    const router = useRouter();
 
     
     useEffect(() => {
         if (walker?.User?.foto) {
           const apiUrl = `${globalConstants.URL_BASE_IMAGES}${walker.User.foto}`;
-          console.log(apiUrl);
           setImageUrl(apiUrl);
         }
       }, [walker]); // Se ejecuta solo cuando `walker` cambia
@@ -27,7 +28,7 @@ export function WalkerCard({ walker }) {
         <Title>{walker.User.nombre_usuario}</Title>
         <StarRating rating={walker?.User.calificacion} />
         <Paragraph>Zona: {walker.Turns.map(turn => turn.zona).join(' | ')}</Paragraph>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => router.push(`/walker-profile/${walker.id}`)}>
           <Text style={styles.buttonText}>Ver Perfil</Text>
         </TouchableOpacity>
       </View>

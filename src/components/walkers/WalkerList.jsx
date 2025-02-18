@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, Modal, Pressable } from 'react-native';
-import WalkerCard from '../components/cards/WalkerCard'; 
+import WalkerCard from '../cards/WalkerCard'; 
 import { Picker } from '@react-native-picker/picker';
 import * as Location from 'expo-location';
-import { getToken } from "../utils/authStorage";
-import globalConstants from '../const/globalConstants';
-import barriosData from '../assets/barrios.json';
+import { getToken } from "../../utils/authStorage";
+import globalConstants from '../../const/globalConstants';
+import barriosData from '../../assets/barrios.json';
 import { AntDesign } from "@expo/vector-icons";
 
 function WalkersList() {

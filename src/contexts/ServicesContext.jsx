@@ -10,7 +10,7 @@ const ServicesContext = createContext();
 // Proveedor del contexto
 export const ServicesProvider = ({ children }) => {
   const [servicesHistory, setServicesHistory] = useState(null);
-  const [servicesRequest, setServiceRequest] = useState(null);
+  const [servicesRequest, setServicesRequest] = useState(null);
   const [confirmedServices, setConfirmedServices] = useState(null);
   const { userLog } = useUserLog();
   const socket = useWebSocket();
@@ -72,7 +72,7 @@ export const ServicesProvider = ({ children }) => {
       );
 
       setConfirmedServices(confirmedServices);
-      setServiceRequest(serviceRequests);
+      setServicesRequest(serviceRequests);
       setServicesHistory(servicesHistory);
     } catch (error) {
       console.error("Error al obtener los servicios:", error);
@@ -113,7 +113,7 @@ export const ServicesProvider = ({ children }) => {
       const newServicesRequest = servicesRequest.filter(
         (service) => service.id !== id,
       );
-      setServiceRequest(newServicesRequest);
+      setServicesRequest(newServicesRequest);
     } catch (error) {
       console.error("Error al eliminar el servicio:", error);
     }
@@ -140,6 +140,7 @@ export const ServicesProvider = ({ children }) => {
         fetchServices,
         cancelService,
         markAsReviewed,
+        setServicesRequest
       }}
     >
       {children}
