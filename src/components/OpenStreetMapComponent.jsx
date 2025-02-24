@@ -50,6 +50,7 @@ const OpenStreetMapComponent = ({ serviceId }) => {
   // marcar la ubicación del paseador en el mapa cada vez que cambie
   useEffect(() => { 
     if (walkerLocation.length === 0) return;
+    console.log(walkerLocation);
     setHtmlContent(`
     <!DOCTYPE html>
     <html lang="es">
@@ -71,13 +72,13 @@ const OpenStreetMapComponent = ({ serviceId }) => {
         
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script>
-            var map = L.map('map').setView(${walkerLocation}, 13); // Coordenadas de ejemplo (Nueva York)
+            var map = L.map('map').setView([-34.9011,-56.1645], 13); // Coordenadas de ejemplo (Nueva York)
             
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
             
-            var marker = L.marker(${walkerLocation}).addTo(map); // Agrega un marcador en las coordenadas especificadas
+            var marker = L.marker([-34.9011,-56.1645]).addTo(map); // Agrega un marcador en las coordenadas especificadas
             marker.bindPopup("<b>¡Hola Nueva York!</b>").openPopup();
         </script>
     </body>
@@ -88,7 +89,7 @@ const OpenStreetMapComponent = ({ serviceId }) => {
   //traigo los datos del servicio
   useEffect(() => {
     const fetchService = async () => {
-      const token = getToken();
+      const token = await getToken();
       const response = await fetch(
         `${globalConstants.URL_BASE}/services/${serviceId}`,
         {
@@ -101,6 +102,7 @@ const OpenStreetMapComponent = ({ serviceId }) => {
         throw new Error("Error al obtener el servicio");
       }
       const data = await response.json();
+      console.log(data.body);
       setCurrentService(data.body);
     };
 
@@ -112,8 +114,11 @@ const OpenStreetMapComponent = ({ serviceId }) => {
   // Unir a la sala del paseador si hay un servicio activo
   const joinWalkerRoom = (service) => { 
     const roomName = `turn_service_${service.TurnId}`;
+    console.log(roomName);
     
     if (!joinedRoom) {
+      //no esta entrando a la sala
+      console.log('joinedRoom');
       setJoinedRoom(true);
       socket.emit('joinRoom', { roomName, userId: userLog.id });
 
