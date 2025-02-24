@@ -12,7 +12,7 @@ export function TurnCard({ turn }) {
       <View style={styles.content}>
         <Title>{turn.zona}</Title>
         <Paragraph>{horaInicio}hs. - {horaFin}hs.</Paragraph>
-        <Paragraph>$ {turn.tarifa}</Paragraph>
+        <Paragraph>{turn.dias.map(day => day.toUpperCase()).join(' - ')}</Paragraph>
         <TouchableOpacity style={styles.button} onPress={() => router.push(`/add-service/${turn.id}`)}>
           <Text style={styles.buttonText}>Solicitar Servicio</Text>
         </TouchableOpacity>

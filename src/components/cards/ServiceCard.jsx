@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useServices } from "../../contexts/ServicesContext";
 
@@ -14,6 +14,10 @@ export function ServiceCard({ service }) {
   const handleReview = () => {
     router.push("/add-review/" + service.id);
   };
+  
+  const handleMap = () => {
+    router.push("/service-map/" + service.id);
+  };
 
   return (
     <View style={styles.card}>
@@ -22,7 +26,7 @@ export function ServiceCard({ service }) {
       <Text style={styles.info}>{service.nota}</Text>
       {!service.calificado_x_cliente && (
         <View style={styles.buttonContainer}>
-          {service.comenzado && !service.finalizado && (
+          {!service.comenzado && (
             <>
               <TouchableOpacity
                 onPress={handleCancel}
@@ -35,10 +39,20 @@ export function ServiceCard({ service }) {
           {service.finalizado && !service.calificado_x_cliente && (
             <>
               <TouchableOpacity
-                onPress={handleReview}
+                onPress={handleMap}
                 style={styles.iconButton}
               >
                 <AntDesign name="form" size={24} color="#000" />
+              </TouchableOpacity>
+            </>
+          )}
+          {service.comenzado && !service.finalizado && (
+            <>
+              <TouchableOpacity
+                onPress={handleMap}
+                style={styles.iconButton}
+              >
+                <FontAwesome5 name="map-marked-alt" size={24} color="#000" />
               </TouchableOpacity>
             </>
           )}

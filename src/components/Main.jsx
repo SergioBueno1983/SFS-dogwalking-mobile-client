@@ -1,5 +1,6 @@
 import { View, StyleSheet, Text } from "react-native";
 import WalkersList from "./walkers/WalkerList";
+import OpenStreetMapComponent from "./OpenStreetMapComponent";
 
 export function Main() {
   return (

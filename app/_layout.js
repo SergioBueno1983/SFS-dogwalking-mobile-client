@@ -16,6 +16,7 @@ import ChatList from "../src/components/ChatList";
 import { useUserLog } from "../src/contexts/UserLogContext";
 import { ShowHeadreToolsProvider } from "../src/contexts/ShowHeaderToolsContext";
 import { BillsProvider } from "../src/contexts/BillsContext";
+import { LocationProvider } from "../src/contexts/LocationContext";
 
 export default function Layout() {
   const router = useRouter();
@@ -76,41 +77,43 @@ function Content() {
 
   return (
     <WebSocketProvider>
-      <BillsProvider>
-        <ChatsProvider>
-          <NotificationsProvider>
-            <ShowHeadreToolsProvider>
-              <ServicesProvider>
-                <Stack
-                  screenOptions={{
-                    headerRight: () =>
-                      userLog ? (
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "flex-end",
-                            gap: 0,
-                          }}
-                        >
-                          <ChatList style={{ padding: 10 }} />
-                          <Notifications style={{ padding: 10 }} />
-                        </View>
-                      ) : null,
-                    headerTitle: "",
-                  }}
-                >
-                  <Stack.Screen
-                    name="chat/[walkerId]"
-                    options={{
-                      headerRight: () => null,
+      <LocationProvider>
+        <BillsProvider>
+          <ChatsProvider>
+            <NotificationsProvider>
+              <ShowHeadreToolsProvider>
+                <ServicesProvider>
+                  <Stack
+                    screenOptions={{
+                      headerRight: () =>
+                        userLog ? (
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "flex-end",
+                              gap: 0,
+                            }}
+                          >
+                            <ChatList style={{ padding: 10 }} />
+                            <Notifications style={{ padding: 10 }} />
+                          </View>
+                        ) : null,
+                      headerTitle: "",
                     }}
-                  />
-                </Stack>
-              </ServicesProvider>
-            </ShowHeadreToolsProvider>
-          </NotificationsProvider>
-        </ChatsProvider>
-      </BillsProvider>
+                  >
+                    <Stack.Screen
+                      name="chat/[walkerId]"
+                      options={{
+                        headerRight: () => null,
+                      }}
+                    />
+                  </Stack>
+                </ServicesProvider>
+              </ShowHeadreToolsProvider>
+            </NotificationsProvider>
+          </ChatsProvider>
+        </BillsProvider>
+      </LocationProvider>
     </WebSocketProvider>
   );
 }

@@ -34,7 +34,8 @@
     "react-native-screens": "~4.4.0",
     "sfs-dogwalking-mobile-walker": "file:",
     "socket.io-client": "^4.8.1",
-    "expo-location": "~18.0.6"
+    "expo-location": "~18.0.6",
+    "react-native-webview": "13.12.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
