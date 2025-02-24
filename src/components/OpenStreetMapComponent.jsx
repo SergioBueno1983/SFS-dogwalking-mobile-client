@@ -34,23 +34,23 @@ const OpenStreetMapComponent = ({ serviceId }) => {
         
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script>
-            var map = L.map('map').setView([-34.9011,-56.1645], 13); // Coordenadas de ejemplo (Nueva York)
+            var map = L.map('map').setView([-34.9011, -56.1645], 13); // Coordenadas de Montevideo
             
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
             
-            var marker = L.marker([-34.9011,-56.1645]).addTo(map); // Agrega un marcador en las coordenadas especificadas
-            marker.bindPopup("<b>Montevideo</b>").openPopup();
+            var marker = L.marker([-34.9011, -56.1645]).addTo(map); // Marcador en Montevideo
+            marker.bindPopup("<b>¡Hola Montevideo!</b>").openPopup();
         </script>
     </body>
     </html>
-    `);
+  `);
 
   // marcar la ubicación del paseador en el mapa cada vez que cambie
   useEffect(() => { 
+    console.log('walkerLocation', walkerLocation);
     if (walkerLocation.length === 0) return;
-    console.log(walkerLocation);
     setHtmlContent(`
     <!DOCTYPE html>
     <html lang="es">
@@ -72,14 +72,14 @@ const OpenStreetMapComponent = ({ serviceId }) => {
         
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script>
-            var map = L.map('map').setView([-34.9011,-56.1645], 13); // Coordenadas de ejemplo (Nueva York)
+            var map = L.map('map').setView(${walkerLocation}, 13); // Coordenadas de ejemplo (Nueva York)
             
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
             
-            var marker = L.marker([-34.9011,-56.1645]).addTo(map); // Agrega un marcador en las coordenadas especificadas
-            marker.bindPopup("<b>¡Hola Nueva York!</b>").openPopup();
+            var marker = L.marker(${walkerLocation}).addTo(map); // Agrega un marcador en las coordenadas especificadas
+            marker.bindPopup("<b>Paseador</b>").openPopup();
         </script>
     </body>
     </html>
@@ -102,7 +102,6 @@ const OpenStreetMapComponent = ({ serviceId }) => {
         throw new Error("Error al obtener el servicio");
       }
       const data = await response.json();
-      console.log(data.body);
       setCurrentService(data.body);
     };
 
@@ -114,11 +113,9 @@ const OpenStreetMapComponent = ({ serviceId }) => {
   // Unir a la sala del paseador si hay un servicio activo
   const joinWalkerRoom = (service) => { 
     const roomName = `turn_service_${service.TurnId}`;
-    console.log(roomName);
     
     if (!joinedRoom) {
       //no esta entrando a la sala
-      console.log('joinedRoom');
       setJoinedRoom(true);
       socket.emit('joinRoom', { roomName, userId: userLog.id });
 
@@ -148,7 +145,7 @@ const OpenStreetMapComponent = ({ serviceId }) => {
 
   // Efecto para gestionar la unión a la sala del paseador y la ubicación inicial
   useEffect(() => {      
-      if (currentService) {
+      if (currentService && currentService.TurnId) {
         joinWalkerRoom(currentService);
       }
   }, [currentService]);
@@ -156,8 +153,9 @@ const OpenStreetMapComponent = ({ serviceId }) => {
   return (
     <View style={styles.container}>
       <WebView
+        key={htmlContent}
         originWhitelist={['*']}
-        source={{ html: htmlContent}}
+        source={{ html: htmlContent }}
         style={styles.map}
       />
     </View>
