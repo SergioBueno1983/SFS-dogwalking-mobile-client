@@ -6,10 +6,8 @@ import OpenStreetMapComponent from "../../../src/components/OpenStreetMapCompone
 export default function ServiceMapPage() {
   const { serviceId } = useLocalSearchParams();
   return (
-    <ScrollView>
       <Screen>
         <OpenStreetMapComponent serviceId={serviceId} />
       </Screen>
-    </ScrollView>
   );
 }

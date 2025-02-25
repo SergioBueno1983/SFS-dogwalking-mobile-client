@@ -35,7 +35,7 @@ export default function Bills() {
   return (
     <ScrollView>
       <Screen>
-        <>
+        <View style={styles.container}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               onPress={() => {
@@ -58,13 +58,17 @@ export default function Bills() {
           ) : (
             <Text style={styles.text}>No hay facturas pendientes.</Text>
           )}
-        </>
+        </View>
       </Screen>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: "100%",
+  },
   button: {
     backgroundColor: "#007AFF",
     padding: 15,

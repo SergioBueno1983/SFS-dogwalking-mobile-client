@@ -30,6 +30,8 @@ export const ServicesProvider = ({ children }) => {
     // Vinculamos el evento del socket dentro del useEffect
     if (!socket) return;
     socket.on("refreshServices", actualizarEstados);
+    socket.on("serviceStarted", actualizarEstados);
+    socket.on("serviceFinished", actualizarEstados);
     
 
     // Cleanup para eliminar el evento cuando se desmonte el componente o cambie socket

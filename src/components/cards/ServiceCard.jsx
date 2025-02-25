@@ -21,9 +21,9 @@ export function ServiceCard({ service }) {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>{service.direccionPickUp}</Text>
+      <Text style={styles.title}>Direccion: {service.direccionPickUp}</Text>
       <Text style={styles.subtitle}>{service.fecha}</Text>
-      <Text style={styles.info}>{service.nota}</Text>
+      <Text style={styles.info}>Nota: {service.nota}</Text>
       {!service.calificado_x_cliente && (
         <View style={styles.buttonContainer}>
           {!service.comenzado && (

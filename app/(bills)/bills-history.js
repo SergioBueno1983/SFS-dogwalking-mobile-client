@@ -31,20 +31,26 @@ export default function BillHistory() {
   return (
     <ScrollView>
       <Screen>
-        {paidBills && paidBills.length > 0 ? (
-          <View>
-            <Text style={styles.title}>Facturas pagadas</Text>
-            <BillList bills={paidBills} />
-          </View>
-        ) : (
-          <Text style={styles.text}>No hay facturas pagadas.</Text>
-        )}
+        <View style={styles.container}>
+          {paidBills && paidBills.length > 0 ? (
+            <View>
+              <Text style={styles.title}>Facturas pagadas</Text>
+              <BillList bills={paidBills} />
+            </View>
+          ) : (
+            <Text style={styles.text}>No hay facturas pagadas.</Text>
+          )}
+        </View>
       </Screen>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: "100%",
+  },
   title: {
     fontSize: 24,
     fontWeight: "bold",

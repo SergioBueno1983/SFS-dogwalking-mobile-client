@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useUserLog } from '../contexts/UserLogContext';
 import { useWebSocket } from '../contexts/WebSocketContext';
 import { getToken } from '../utils/authStorage';
 import globalConstants from '../const/globalConstants';
+import { useRouter } from 'expo-router';
 
 const OpenStreetMapComponent = ({ serviceId }) => {
 
   const { userLog } = useUserLog();
   const socket = useWebSocket();
+  const router = useRouter();
   const [joinedRoom, setJoinedRoom] = useState(false);
   const [walkerLocation, setWalkerLocation] = useState([]);
   const [currentService, setCurrentService] = useState({});
+  const [serviceFinished, setServiceFinished] = useState(false);
   const [htmlContent, setHtmlContent] = useState(`
     <!DOCTYPE html>
     <html lang="es">
@@ -29,7 +32,7 @@ const OpenStreetMapComponent = ({ serviceId }) => {
         </style>
     </head>
     <body>
-        <h1>Mapa con Leaflet y OpenStreetMap</h1>
+        <h1>Ubicacion del paseador</h1>
         <div id="map"></div>
         
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -47,10 +50,9 @@ const OpenStreetMapComponent = ({ serviceId }) => {
     </html>
   `);
 
-  // marcar la ubicación del paseador en el mapa cada vez que cambie
+  // // marcar la ubicación del paseador en el mapa cada vez que cambie
   useEffect(() => { 
-    console.log('walkerLocation', walkerLocation);
-    if (walkerLocation.length === 0) return;
+    if (walkerLocation && walkerLocation?.length === 0) return;
     setHtmlContent(`
     <!DOCTYPE html>
     <html lang="es">
@@ -67,18 +69,18 @@ const OpenStreetMapComponent = ({ serviceId }) => {
         </style>
     </head>
     <body>
-        <h1>Mapa con Leaflet y OpenStreetMap</h1>
+        <h1>Ubicacion del paseador</h1>
         <div id="map"></div>
         
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
         <script>
-            var map = L.map('map').setView(${walkerLocation}, 13); // Coordenadas de ejemplo (Nueva York)
+            var map = L.map('map').setView([${walkerLocation}], 13);
             
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
             
-            var marker = L.marker(${walkerLocation}).addTo(map); // Agrega un marcador en las coordenadas especificadas
+            var marker = L.marker([${walkerLocation}]).addTo(map); // Agrega un marcador en las coordenadas especificadas
             marker.bindPopup("<b>Paseador</b>").openPopup();
         </script>
     </body>
@@ -86,7 +88,7 @@ const OpenStreetMapComponent = ({ serviceId }) => {
     `)
   }, [walkerLocation]);
 
-  //traigo los datos del servicio
+  // //traigo los datos del servicio
   useEffect(() => {
     const fetchService = async () => {
       const token = await getToken();
@@ -131,6 +133,7 @@ const OpenStreetMapComponent = ({ serviceId }) => {
       socket.on('serviceFinished', () => {
         setWalkerLocation(null);
         setJoinedRoom(false); // Resetear el estado de la sala
+        setServiceFinished(true);
         socket.emit('leaveRoom', { roomName , userId: userLog.id });
       });
 
@@ -152,12 +155,14 @@ const OpenStreetMapComponent = ({ serviceId }) => {
 
   return (
     <View style={styles.container}>
-      <WebView
-        key={htmlContent}
+      { !serviceFinished && <WebView
         originWhitelist={['*']}
         source={{ html: htmlContent }}
         style={styles.map}
-      />
+      />}
+      { serviceFinished && <Text style={styles.text}>
+        El paseador ha finalizado su servicio
+      </Text>}
     </View>
   );
 };
@@ -165,6 +170,14 @@ const OpenStreetMapComponent = ({ serviceId }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: "100%",
+    height: "100%",
+  },
+  text: {
+    fontSize: 20,
+    textAlign: "center",
+    marginTop: 20,
+    fontWeight: "bold",
   },
   map: {
     flex: 1,

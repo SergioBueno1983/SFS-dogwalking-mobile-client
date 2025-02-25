@@ -45,7 +45,7 @@ export default function ServiceList() {
   return (
     <ScrollView>
       <Screen>
-        <>
+        <View style={styles.container}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               onPress={() => {
@@ -60,7 +60,7 @@ export default function ServiceList() {
             </TouchableOpacity>
           </View>
           {confirmedServices && confirmedServices.length > 0 ? (
-            <>
+            <View style={styles.servicesContainer}>
               {activeServices.length > 0 && (
                 <View>
                   <Text style={styles.text}>Servicios Activos</Text>
@@ -73,23 +73,31 @@ export default function ServiceList() {
                   <ServiceListComponent services={nextServices} />
                 </View>
               )}
-            </>
+            </View>
           ) : (
             <Text style={styles.text}>No hay servicios confirmados</Text>
           )}
-        </>
+        </View>
       </Screen>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: "100%",
+    alignItems: "center",
+  },
+  servicesContainer: {
+    padding: 0,
+  },
   button: {
     backgroundColor: "#007AFF",
     padding: 15,
     borderRadius: 100,
     alignItems: "center",
-    margin: 20,
+    marginRight: 20,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -100,8 +108,9 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 40,
-    fontSize: 20,
+    fontSize: 28,
     marginBottom: 20,
     textAlign: "center",
+    fontWeight: "bold",
   },
 });
