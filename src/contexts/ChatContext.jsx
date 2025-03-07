@@ -1,8 +1,15 @@
-import React, { createContext, useState, useContext, useEffect, useCallback  } from 'react';
-import { useUserLog } from './UserLogContext';
-import { useWebSocket } from '../contexts/WebSocketContext';
-import { getToken } from '../utils/authStorage';
-import globalConstants from '../const/globalConstants';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+} from "react";
+import { useUserLog } from "./UserLogContext";
+import { useWebSocket } from "../contexts/WebSocketContext";
+import { getToken } from "../utils/authStorage";
+import globalConstants from "../const/globalConstants";
+import { useServices } from "./ServicesContext";
 
 const ChatsContext = createContext();
 
@@ -14,10 +21,7 @@ export const ChatsProvider = ({ children }) => {
   const [unreadChatsCount, setUnreadChatsCount] = useState(0); // Estado para almacenar el número de chats con mensajes no leídos
   const { userLog } = useUserLog();
   const socket = useWebSocket();
-
-
-
-  
+  const { servicesRequest } = useServices();
 
   const removeUnreadChat = async (chatId) => {
     try {
@@ -27,20 +31,23 @@ export const ChatsProvider = ({ children }) => {
         return updatedUnreadChats;
       });
       setUnreadChatsCount((prevCount) => (prevCount > 0 ? prevCount - 1 : 0));
-      setUsersWithChat((prevUsersWithChat) => 
-        prevUsersWithChat.map((user) => 
-          user.id === chatId 
-            ? { ...user, lastMessageReceived: { ...user.lastMessageReceived, read: true } }
-            : user
-        )
+      setUsersWithChat((prevUsersWithChat) =>
+        prevUsersWithChat.map((user) =>
+          user.id === chatId
+            ? {
+                ...user,
+                lastMessageReceived: {
+                  ...user.lastMessageReceived,
+                  read: true,
+                },
+              }
+            : user,
+        ),
       );
     } catch (error) {
-      console.error('Error al eliminar el chat de los no leidos:', error);
+      console.error("Error al eliminar el chat de los no leidos:", error);
     }
-
   };
-  
-  
 
   const fetchUsersChats = async () => {
     try {
@@ -48,62 +55,84 @@ export const ChatsProvider = ({ children }) => {
 
       let response;
 
-      response = await fetch(`${globalConstants.URL_BASE}/contacts/walkers/${userLog.id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
+      response = await fetch(
+        `${globalConstants.URL_BASE}/contacts/walkers/${userLog.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       if (!response.ok) {
-        throw new Error('Error al obtener la respuesta del servidor');
+        throw new Error("Error al obtener la respuesta del servidor");
       }
       const data = await response.json();
       setUsersWithChat(data.body);
     } catch (error) {
-      console.error('Error al obtener los clientes:', error);
+      console.error("Error al obtener los clientes:", error);
     }
   };
 
   const fetchUnreadChats = async () => {
     try {
       const token = await getToken();
-      const response = await fetch(`${globalConstants.URL_BASE}/unread/${userLog.id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
+      const response = await fetch(
+        `${globalConstants.URL_BASE}/unread/${userLog.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
       const data = await response.json();
 
       if (data.body.length > 0) {
         // Crea un conjunto para almacenar senderId únicos
         const uniqueSenderIds = new Set();
-  
+
         // Recorre los mensajes y agrega los senderId al conjunto
-        data.body.forEach(message => {
+        data.body.forEach((message) => {
           uniqueSenderIds.add(message.senderId);
         });
-  
+
         setUserWithUnreadMessage(uniqueSenderIds);
       }
     } catch (error) {
-      console.error('Error al obtener los clientes:', error);
-    }        
-  }
+      console.error("Error al obtener los clientes:", error);
+    }
+  };
+
+  //cuando hay una nueva solicitud de servicio, verifico si ya tengo un chat con el cliente, si no tengo lo agrego
+  useEffect(() => {
+    if (servicesRequest?.length > 0) {
+      // selecciono la ultima posicion del array
+      const lastService = servicesRequest[servicesRequest.length - 1];
+      if (
+        // si no tenog al paseador en mis chats actualizo
+        !usersWithChat.find((user) => user.id === lastService.Turn?.WalkerId)
+      ) {
+        fetchUsersChats();
+        fetchUnreadChats();
+      }
+    }
+  }, [servicesRequest]);
 
   //useEffect que actualiza el contador cada vez que cambia el estado de unreadChats
   useEffect(() => {
     setUnreadChatsCount(userWithUnreadMessage.size);
   }, [userWithUnreadMessage]);
-  
+
   // useEffect que carga los estados de los chats del usuario logueado
   useEffect(() => {
     if (userLog) {
-      fetchUsersChats(); 
+      fetchUsersChats();
       fetchUnreadChats();
-    } else { // si no hay usuario logueado, limpia el estado de chats
+    } else {
+      // si no hay usuario logueado, limpia el estado de chats
       setUsersWithChat([]);
       setUserWithUnreadMessage(new Set());
       setUnreadChatsCount(0);
@@ -113,7 +142,7 @@ export const ChatsProvider = ({ children }) => {
   const addChat = async (userChat) => {
     // agrego el chat recibido al estado
     setUsersWithChat((prevChats) => [...prevChats, userChat]);
-  }
+  };
 
   const addUnreadChat = (userId) => {
     setUserWithUnreadMessage((prevChats) => {
@@ -127,23 +156,22 @@ export const ChatsProvider = ({ children }) => {
     try {
       // Definimos `handleNewMessage` dentro del useEffect para que siempre acceda a los valores más recientes de usersChats y unreadChats
       const handleNewMessage = async (newMessage) => {
-
         if (newMessage.senderId === userLog.id) return; // No se procesa el mensaje de mi mismo
 
         const token = await getToken();
 
         // me traigo la info del mensaje nuevo desde la api para tener los datos completos
-        const response = await fetch(`${globalConstants.URL_BASE}/messages/single/${newMessage.id}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
+        const response = await fetch(
+          `${globalConstants.URL_BASE}/messages/single/${newMessage.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
-
+        );
 
         const data = await response.json();
         const fullMessage = data.body;
-
-        
 
         // chequeo si el senderId que viene en el mensaje, ya existe en el estado
         const existingChat = usersWithChat.find((chat) => {
@@ -159,25 +187,28 @@ export const ChatsProvider = ({ children }) => {
 
         // si no existia ya un chat con ese usuario, busco el cliente con el senderId que me llega con el mensaje y lo agrego al estado
         if (!existingChat) {
-
           // hago un fetch para obtener el paseador que envia con el senderId
-          const response = await fetch(`${globalConstants.URL_BASE}/walkers/${newMessage.senderId}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`,
+          const response = await fetch(
+            `${globalConstants.URL_BASE}/walkers/${newMessage.senderId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
             },
-          });
-          const user = await response.json();      
+          );
+          const user = await response.json();
 
           // agrego el usuario a los estados
           addChat(user.body);
           addUnreadChat(user.body.id);
           // si existe el chat, pero no está en el estado de unreadChats, lo agrego
-        } else if (existingChat && !existingUnreadChat) { 
+        } else if (existingChat && !existingUnreadChat) {
           // modifico el estado usersChats para asignarle el ultimo mensaje al chat en el atributo lastMessage
           setUsersWithChat((prevUsersWithChat) => {
-
             const updatedUsersChats = [...prevUsersWithChat]; // Crear una copia de los chats existentes
-            const chatIndex = updatedUsersChats.findIndex((chat) => chat.id === newMessage.senderId);
+            const chatIndex = updatedUsersChats.findIndex(
+              (chat) => chat.id === newMessage.senderId,
+            );
             updatedUsersChats[chatIndex].lastMessage = fullMessage;
             if (fullMessage.receiverId === userLog.id) {
               updatedUsersChats[chatIndex].lastMessageReceived = fullMessage;
@@ -185,39 +216,42 @@ export const ChatsProvider = ({ children }) => {
             return updatedUsersChats;
           });
 
-
           addUnreadChat(newMessage.senderId);
         }
-      
+
         setUsersWithChat((prevUsersWithChat) => {
-          const updatedChats = [...prevUsersWithChat]; // Crear una copia de los chats existentes 
-          const orderedChats = updatedChats.sort((b, a) => new Date(a.lastMessage?.createdAt) - new Date(b.lastMessage?.createdAt));
+          const updatedChats = [...prevUsersWithChat]; // Crear una copia de los chats existentes
+          const orderedChats = updatedChats.sort(
+            (b, a) =>
+              new Date(a.lastMessage?.createdAt) -
+              new Date(b.lastMessage?.createdAt),
+          );
           return orderedChats; // Actualiza el estado con los chats ordenados
         });
       };
       // Vinculamos el evento del socket dentro del useEffect
       if (!socket) return;
-      socket.on('receiveMessage', handleNewMessage);
+      socket.on("receiveMessage", handleNewMessage);
 
       // Cleanup para eliminar el evento cuando se desmonte el componente o cambie socket
-      return () => socket.off('receiveMessage', handleNewMessage);
-
+      return () => socket.off("receiveMessage", handleNewMessage);
     } catch (error) {
       console.error("Error al ejecutar useEffect", error);
     }
-    
-    
-
-
-
-
   }, [socket, usersWithChat, userWithUnreadMessage]); // Dependencias para que el useEffect se actualice con los valores más recientes
-
-
 
   return (
     <ChatsContext.Provider
-      value={{ removeUnreadChat, usersWithChat, addChat, userWithUnreadMessage, setUserWithUnreadMessage, unreadChatsCount, setUnreadChatsCount, setUsersWithChat }}
+      value={{
+        removeUnreadChat,
+        usersWithChat,
+        addChat,
+        userWithUnreadMessage,
+        setUserWithUnreadMessage,
+        unreadChatsCount,
+        setUnreadChatsCount,
+        setUsersWithChat,
+      }}
     >
       {children}
     </ChatsContext.Provider>

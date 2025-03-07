@@ -79,10 +79,10 @@ function Content() {
     <WebSocketProvider>
       <LocationProvider>
         <BillsProvider>
-          <ChatsProvider>
-            <NotificationsProvider>
-              <ShowHeadreToolsProvider>
-                <ServicesProvider>
+          <ServicesProvider>
+            <ChatsProvider>
+              <NotificationsProvider>
+                <ShowHeadreToolsProvider>
                   <Stack
                     screenOptions={{
                       headerRight: () =>
@@ -108,10 +108,10 @@ function Content() {
                       }}
                     />
                   </Stack>
-                </ServicesProvider>
-              </ShowHeadreToolsProvider>
-            </NotificationsProvider>
-          </ChatsProvider>
+                </ShowHeadreToolsProvider>
+              </NotificationsProvider>
+            </ChatsProvider>
+          </ServicesProvider>
         </BillsProvider>
       </LocationProvider>
     </WebSocketProvider>

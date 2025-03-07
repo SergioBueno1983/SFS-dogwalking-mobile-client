@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useServices } from "../../contexts/ServicesContext";
@@ -8,22 +8,40 @@ export function ServiceCard({ service }) {
   const { cancelService } = useServices();
 
   const handleCancel = () => {
-    cancelService(service.id, service.fecha, service.ClientId);
+    Alert.alert(
+      "Cancelar Servicio", // Título
+      "¿Estás seguro de que deseas cancelar el servicio?", // Mensaje
+      [
+        {
+          text: "Si",
+          onPress: () =>
+            cancelService(service.id, service.fecha, service.Turn.WalkerId),
+        },
+        { text: "No" },
+      ],
+      { cancelable: false },
+    );
   };
 
   const handleReview = () => {
     router.push("/add-review/" + service.id);
   };
-  
+
   const handleMap = () => {
     router.push("/service-map/" + service.id);
   };
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>Direccion: {service.direccionPickUp}</Text>
-      <Text style={styles.subtitle}>{service.fecha}</Text>
-      <Text style={styles.info}>Nota: {service.nota}</Text>
+      <Text style={styles.title}>
+        {service.fecha.split("-").reverse().join("-")}
+      </Text>
+      <Text style={styles.subtitle}>{service.direccionPickUp}</Text>
+      <Text style={styles.info}>
+        {service.Turn.hora_inicio.slice(0, 5)} -{" "}
+        {service.Turn.hora_fin.slice(0, 5)}
+      </Text>
+      <Text style={styles.info}>{service.nota}</Text>
       {!service.calificado_x_cliente && (
         <View style={styles.buttonContainer}>
           {!service.comenzado && (
@@ -39,7 +57,7 @@ export function ServiceCard({ service }) {
           {service.finalizado && !service.calificado_x_cliente && (
             <>
               <TouchableOpacity
-                onPress={handleMap}
+                onPress={handleReview}
                 style={styles.iconButton}
               >
                 <AntDesign name="form" size={24} color="#000" />
@@ -48,10 +66,7 @@ export function ServiceCard({ service }) {
           )}
           {service.comenzado && !service.finalizado && (
             <>
-              <TouchableOpacity
-                onPress={handleMap}
-                style={styles.iconButton}
-              >
+              <TouchableOpacity onPress={handleMap} style={styles.iconButton}>
                 <FontAwesome5 name="map-marked-alt" size={24} color="#000" />
               </TouchableOpacity>
             </>
@@ -80,18 +95,18 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 8,
+    marginBottom: 5,
     color: "#333",
   },
   subtitle: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 5,
+    marginBottom: 8,
     color: "#555",
   },
   info: {
     fontSize: 18,
-    marginBottom: 4,
+    marginBottom: 2,
     color: "#666",
   },
   buttonContainer: {

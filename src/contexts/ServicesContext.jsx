@@ -32,7 +32,6 @@ export const ServicesProvider = ({ children }) => {
     socket.on("refreshServices", actualizarEstados);
     socket.on("serviceStarted", actualizarEstados);
     socket.on("serviceFinished", actualizarEstados);
-    
 
     // Cleanup para eliminar el evento cuando se desmonte el componente o cambie socket
     return () => socket.off("refreshServices", actualizarEstados);
@@ -56,11 +55,12 @@ export const ServicesProvider = ({ children }) => {
       today.setHours(today.getHours() - 3);
       const fecha = today.toISOString().split("T")[0];
 
-
-
       // filtro los servicios que tengan el campo aceptado en true
       const confirmedServices = services.filter(
-        (service) => service.aceptado === true && service.finalizado === false && service.fecha >= fecha,
+        (service) =>
+          service.aceptado === true &&
+          service.finalizado === false &&
+          service.fecha >= fecha,
       );
 
       // filtro los servicios que tengan el campo aceptado en false
@@ -80,8 +80,6 @@ export const ServicesProvider = ({ children }) => {
       console.error("Error al obtener los servicios:", error);
     }
   };
-
-  
 
   // funcion para eliminar un servicio sin comenzar
   const cancelService = async (id, fecha, walkerId) => {
@@ -142,7 +140,7 @@ export const ServicesProvider = ({ children }) => {
         fetchServices,
         cancelService,
         markAsReviewed,
-        setServicesRequest
+        setServicesRequest,
       }}
     >
       {children}
