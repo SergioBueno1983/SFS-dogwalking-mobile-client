@@ -8,6 +8,7 @@ import {
   Pressable,
   Modal,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import globalConstants from "../../const/globalConstants";
 import { getToken, removeToken } from "../../utils/authStorage";
@@ -86,8 +87,18 @@ export default function ClientProfile() {
         
         if (data.ok) {
           setModalVisible(false); // Cerramos el modal
-          alert("Imagen de perfil actualizada exitosamente");
           setUriImage(localUri); // Actualiza la imagen de perfil localmente
+          Alert.alert(
+            "Imagen actualizada", // Título
+            "¡La imagen ha sido actualizada con éxito!", // Mensaje
+            [
+              {
+                text: "Ok",
+                onPress: () => {},
+              },
+            ],
+            { cancelable: false },
+          );
         } else {
           alert("Error al actualizar la imagen: " + data.message);
         }
@@ -153,7 +164,7 @@ export default function ClientProfile() {
         
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Fecha de Nacimiento: </Text>
-                <Text style={{ fontSize: 16 }}> {userLog?.fecha_nacimiento}</Text>
+                <Text style={{ fontSize: 16 }}>{userLog?.fecha_nacimiento.split('-').reverse().join('-')}</Text>
               </View>
 
       </View>

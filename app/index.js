@@ -1,6 +1,13 @@
 import { LoginForm } from "../src/components/LoginForm";
-import { Main } from "../src/components/Main";
+import { Screen } from "../src/components/Screen";
+import { ScrollView } from "react-native";
 
 export default function Index() {
-  return <LoginForm />;
+  return (
+    <ScrollView>
+      <Screen />
+        <LoginForm />
+      <Screen />
+    </ScrollView>
+  )
 }

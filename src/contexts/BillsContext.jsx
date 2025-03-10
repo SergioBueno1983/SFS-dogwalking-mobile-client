@@ -3,6 +3,7 @@ import React, { createContext, useState, useContext, useEffect } from "react";
 import { useUserLog } from "./UserLogContext";
 import { getToken } from "../utils/authStorage";
 import globalConstants from "../const/globalConstants";
+import { useWebSocket } from "./WebSocketContext";
 
 const BillsContext = createContext();
 
@@ -12,6 +13,7 @@ export const BillsProvider = ({ children }) => {
   const [unpaidBills, setUnpaidBills] = useState([]);
   const [paidBills, setPaidBills] = useState([]);
   const { userLog } = useUserLog();
+  const socket = useWebSocket();
 
   const getBills = async () => {
     try {
@@ -42,6 +44,19 @@ export const BillsProvider = ({ children }) => {
       getBills();
     }
   }, [userLog]);
+
+  // actualizo los servicios cuando me lo indiquen desde el socket
+  useEffect(() => {
+    const actualizarBills = async () => {
+      getBills();
+    };
+    // Vinculamos el evento del socket dentro del useEffect
+    if (!socket) return;
+    socket.on("refreshBills", actualizarBills);
+
+    // Cleanup para eliminar el evento cuando se desmonte el componente o cambie socket
+    return () => socket.off("refreshBills", actualizarBills);
+  }, [socket]);
 
   return (
     <BillsContext.Provider
