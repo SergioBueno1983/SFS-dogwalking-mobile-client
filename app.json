@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "SFS-dogwalking-mobile-walker",
-    "slug": "SFS-dogwalking-mobile-walker",
+    "name": "SFS-dogwalking-mobile-client",
+    "slug": "SFS-dogwalking-mobile-client",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "SFS-dogwalking",
+    "scheme": "sfsdogwalkingclient",
     "platforms": [
       "ios",
       "android"
@@ -19,14 +19,14 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.SFSdogwalkingmobilewalker"
+      "bundleIdentifier": "com.SFSdogwalkingmobileclient"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.SFSdogwalkingmobilewalker"
+      "package": "com.SFSdogwalkingmobileclient"
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
@@ -34,6 +34,15 @@
     "plugins": [
       "expo-router",
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "7b091609-f6d5-4fa1-b03c-fdb4f479afa3"
+      }
+    },
+    "owner": "sergio1983"
   }
 }

@@ -6,13 +6,19 @@ export function TurnCard({ turn }) {
     const router = useRouter();
     const horaInicio = turn.hora_inicio.split(":")[0] + ":" + turn.hora_inicio.split(":")[1];
     const horaFin = turn.hora_fin.split(":")[0] + ":" + turn.hora_fin.split(":")[1];
+    let diasArray = [];
+  try {
+    diasArray = typeof turn.dias === "string" ? JSON.parse(turn.dias) : turn.dias;
+  } catch (error) {
+    console.error("Error al parsear dias:", error);
+  }
 
   return (
     <View style={styles.card}>
       <View style={styles.content}>
         <Title>{turn.zona}</Title>
         <Paragraph>{horaInicio}hs. - {horaFin}hs.</Paragraph>
-        <Paragraph>{turn.dias.map(day => day.toUpperCase()).join(' - ')}</Paragraph>
+        <Paragraph>{diasArray.map(day => day.toUpperCase()).join(' - ')}</Paragraph>
         <TouchableOpacity style={styles.button} onPress={() => router.push(`/add-service/${turn.id}`)}>
           <Text style={styles.buttonText}>Solicitar Servicio</Text>
         </TouchableOpacity>
