@@ -85,11 +85,11 @@ export function LoginForm() {
   };
 
   return (
-    <Screen>
+    <>
       {loading ? (
         <ActivityIndicator />
       ) : (
-        <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.container}>
           <Text style={styles.title}>Ingrese su usuario y contraseña</Text>
 
           <View style={styles.inputContainer}>
@@ -122,9 +122,9 @@ export function LoginForm() {
               <Text style={styles.buttonText}>Registrarse</Text>
             </Pressable>
           </Link>
-        </ScrollView>
+        </View>
       )}
-    </Screen>
+    </>
   );
 }
 
@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 20,
     backgroundColor: "#f5f5f5",
+    width: "100%",
   },
   title: {
     fontSize: 24,

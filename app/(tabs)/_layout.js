@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, FontAwesome6 } from "@expo/vector-icons";
 
 export default function TabsLayout() {
   return (
@@ -43,7 +43,7 @@ export default function TabsLayout() {
         options={{
           title: "Facturas",
           tabBarIcon: ({ color }) => (
-            <AntDesign name="book" size={24} color="#000" />
+            <FontAwesome6 name="money-bill-alt" size={24} color="#000" />
           ),
         }}
       />

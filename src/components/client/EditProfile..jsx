@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",

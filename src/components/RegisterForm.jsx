@@ -6,11 +6,13 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Alert,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import GlobalConstants from "../const/globalConstants";
 import { useRouter } from "expo-router";
 import { Screen } from "./Screen";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export function RegisterForm() {
   const [username, setUsername] = useState("");
@@ -21,6 +23,7 @@ export function RegisterForm() {
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const router = useRouter();
+  const [hideNewPassword, setHideNewPassword] = useState(true);
 
   const onDateChange = (event, selectedDate) => {
     setShowDatePicker(false); // Cierra el DatePicker al seleccionar una fecha
@@ -54,15 +57,25 @@ export function RegisterForm() {
       if (!response.ok) {
         throw new Error(`Error en el registro: ${response.status}`);
       }
-      router.back();
+      Alert.alert(
+        "Usuario registrado", // Título
+        "¡Su usuario ha sido registrado con éxito!", // Mensaje
+        [
+          {
+            text: "Ok",
+            onPress: () =>
+              router.back(),
+          },
+        ],
+        { cancelable: false },
+      );
     } catch (error) {
       console.error("Error al registrar el usuario:", error);
     }
   };
 
   return (
-    <Screen>
-      <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.container}>
         <Text style={styles.title}>Registro de Usuario</Text>
 
         <View style={styles.inputContainer}>
@@ -77,13 +90,25 @@ export function RegisterForm() {
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Contraseña</Text>
-          <TextInput
-            style={styles.input}
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Ingrese su contraseña"
-            secureTextEntry
-          />
+          <View style={styles.inputWithIcon}>
+            <TextInput
+              style={styles.input}
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Ingrese su contraseña"
+              secureTextEntry={hideNewPassword}
+            />
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => setHideNewPassword(!hideNewPassword)}
+            >
+              <Ionicons
+                name={hideNewPassword ? "eye" : "eye-off"}
+                size={24}
+                color="gray"
+              />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={styles.inputContainer}>
@@ -140,8 +165,7 @@ export function RegisterForm() {
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Registrarse</Text>
         </TouchableOpacity>
-      </ScrollView>
-    </Screen>
+      </View>
   );
 }
 
@@ -159,6 +183,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginBottom: 15,
+    width: "95%",
   },
   label: {
     fontSize: 16,
@@ -166,6 +191,7 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   input: {
+    flex: 1,
     borderWidth: 1,
     borderColor: "#ddd",
     padding: 10,
@@ -191,5 +217,16 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  iconButton: {
+    padding: 10, // Espaciado interno para que el ícono tenga buen tamaño
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  inputWithIcon: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    width: "100%",
   },
 });

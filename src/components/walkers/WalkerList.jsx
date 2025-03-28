@@ -6,7 +6,7 @@ import * as Location from 'expo-location';
 import { getToken } from "../../utils/authStorage";
 import globalConstants from '../../const/globalConstants';
 import barriosData from '../../assets/barrios.json';
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 
 function WalkersList() {
   const [walkers, setWalkers] = useState([]);
@@ -22,28 +22,35 @@ function WalkersList() {
   const [zones, setZones] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    const fetchWalkers = async () => {
-      try {
-        const token = await getToken();
-        const response = await fetch(`${globalConstants.URL_BASE}/walkers`, { 
-          headers: {
-             Authorization: `Bearer ${token}` 
-            }
-        });
-        if (!response.ok) throw new Error('Error en la respuesta de la red');
-        const data = await response.json();
-        //filtro walkers sin turno
-        const filteredWalkers = data.body.filter(walker => walker.Turns.length > 0);
-        setWalkers(filteredWalkers);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+
+  const fetchWalkers = async () => {
+    try {
+      const token = await getToken();
+      const response = await fetch(`${globalConstants.URL_BASE}/walkers`, { 
+        headers: {
+           Authorization: `Bearer ${token}` 
+          }
+      });
+      if (!response.ok) throw new Error('Error en la respuesta de la red');
+      const data = await response.json();
+      //filtro walkers sin turno
+      const filteredWalkers = data.body.filter(walker => walker.Turns.length > 0);
+      setWalkers(filteredWalkers);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {    
     fetchWalkers();
   }, []);
+
+  const handleRefreshPage = async () => {
+    await fetchWalkers();
+
+  };
 
   useEffect(() => {
     const getLocation = async () => {
@@ -89,9 +96,16 @@ function WalkersList() {
   return (
       <View style={styles.container}>        
         {/* Botón para abrir el modal de filtros */}
+        <View style={{flexDirection: 'row'}}>
         <Pressable  onPress={() => setModalVisible(true)}>
             <AntDesign name="filter" size={24} color="black" />
         </Pressable>
+        <TouchableOpacity onPress={() => handleRefreshPage()}>
+          <FontAwesome name="refresh" size={24} />
+        </TouchableOpacity>
+
+        </View>
+
 
         {/* Modal con los filtros */}
         <Modal
